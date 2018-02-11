@@ -1,0 +1,43 @@
+{
+  "name": "nativescript-ichi-printer",
+  "version": "0.1.0",
+  "description": "POS printer for NativeScript",
+  "keywords": [
+    "POS printer",
+    "socket",
+    "nativescript",
+    "javascript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mozhju/nativescript-ichi-printer.git"
+  },
+  "author": {
+    "name": "mozhju"
+  },
+  "bugs": {
+      "url": "https://github.com/mozhju/nativescript-ichi-printer/issues"
+  },
+  "license": {
+      "type": "MIT",
+      "url": "https://github.com/mozhju/nativescript-ichi-printer/blob/master/LICENSE"
+  },
+  "homepage": "https://github.com/mozhju/nativescript-ichi-printer",
+  "readmeFilename": "README.md",
+  "main": "index",
+  "typyings": "index.d.ts",
+  "scripts": {
+    "prepublish": "tsc"
+  },
+  "nativescript": {
+    "platforms": {
+      "android": "2.4.0"
+    }
+  },
+  "devDependencies": {
+    "typescript": "^2.2.1"
+  },
+  "dependencies": {
+
+  }
+}
