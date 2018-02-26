@@ -6,8 +6,7 @@ POS printer for NativeScript.
 
 - Android (any device with Android 4.4 and higher)
 
-There is no support for iOS (yet), as I am not an iOS developer. Contributions
-for adding iOS support are welcome!
+There is no support for iOS yet!
 
 ## Installing
 
@@ -17,9 +16,7 @@ tns plugin add nativescript-ichi-printer
 
 ## Usage
 
-This plugin provides one class: `PrintClient`.
-All of them provide similar, callback-based, interface. An example of usage is
-worth a thousands words and therefore here is a TypeScript example:
+Here is a TypeScript example:
 
 ```js
 import {PrintClient} from "nativescript-ichi-printer";
@@ -57,13 +54,5 @@ printClient.send(bytes);
 printClient.close();
 ```
 
-## Contributing
 
-Any contributions are welcome, feel free to submit a pull request on GitHub. I
-would appreciate a PR, which would add support for iOS.
-
-## Future Plans
-
-- support iOS
-- implement a wrapper for future-based interface
 

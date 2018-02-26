@@ -19,7 +19,7 @@ declare module cn {
                 onData(data: string): void;
             }
 
-            export class PrintClient {
+            export class Printer {
                 constructor(listener: ClientListener, printType: number);
                 connect(serverName: string, port: number): number;
                 close(): number;
@@ -32,7 +32,7 @@ declare module cn {
 
 
 export class PrintClient {
-    private client: cn.ichi.android.PrintClient;
+    private client: cn.ichi.android.Printer;
     public onData: {(data: string): void;};
     public onError: {(id: number, message: string): void;};
     public onConnected: {(id: number): void;};
@@ -66,7 +66,7 @@ export class PrintClient {
         if (!printType) {
             printType = 0;
         }
-        this.client = new cn.ichi.android.PrintClient(listener, printType);
+        this.client = new cn.ichi.android.Printer(listener, printType);
     }
 
     public connect(servername: string, port: number): number {
