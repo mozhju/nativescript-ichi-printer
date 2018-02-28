@@ -25,9 +25,9 @@ declare module cn {
                 close(): number;
                 send(data: Array<number>): number;
                 receive(): number;
-                static getUsbPrinters(): Array<string>;
-                static getBlueToothPrinters(): Array<string>;
-                static getSerialPortPrinters(): Array<string>;
+                static getUsbPrinters(): string;
+                static getBlueToothPrinters(): string;
+                static getSerialPortPrinters(): string;
             }
         }
     }
@@ -89,15 +89,30 @@ export class PrintClient {
     }
 
     public static getUsbPrinters(): Array<string> {
-        return cn.ichi.android.Printer.getUsbPrinters();
+        let jsonString:string = cn.ichi.android.Printer.getUsbPrinters();
+        if (jsonString.length > 0) {
+            return JSON.parse(jsonString);
+        } else {
+            return [];
+        }
     }
 
     public static getBlueToothPrinters(): Array<string> {
-        return cn.ichi.android.Printer.getBlueToothPrinters();
+        let jsonString:string = cn.ichi.android.Printer.getBlueToothPrinters();
+        if (jsonString.length > 0) {
+            return JSON.parse(jsonString);
+        } else {
+            return [];
+        }
     }
 
     public static getSerialPortPrinters(): Array<string> {
-        return cn.ichi.android.Printer.getSerialPortPrinters();
+        let jsonString:string = cn.ichi.android.Printer.getSerialPortPrinters();
+        if (jsonString.length > 0) {
+            return JSON.parse(jsonString);
+        } else {
+            return [];
+        }
     }
 }
 

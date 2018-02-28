@@ -21,7 +21,7 @@ Here is a TypeScript example:
 ```js
 import {PrintClient} from "nativescript-ichi-printer";
 
-// Connect to the Printer
+// new Printer Client, param:  0: TCP, 1: USB, 2: Bluetooth
 var printClient = new PrintClient(0);
 printClient.onData = (data: string) => {
     console.log("Data from Printer: ", data);
@@ -31,27 +31,33 @@ printClient.onError = (id: number, message: string) => {
 };
 printClient.onConnected = (id: number) => {
     console.log("Print client connected action #: ", id);
+    var message = "Print test String!";
+    var bytes = [];
+    for (var i = 0; i < message.length; i++) {
+        var c = message.charCodeAt(i);
+        bytes.push(c & 0xFF);
+    }
+    printClient.send(bytes);
 };
 printClient.onSended = (id: number) => {
     console.log("Print client sened action #: ", id);
+    // When we are finished
+    printClient.close();
 };
 printClient.onClosed = (id: number) => {
     console.log("Print client closed action #: ", id);
 };
 
-// Connect printer
+// Connect printer (type: TCP), param: IP, port
 printClient.connect("192.168.1.192", 9100);
 
-var message = "Print test String!";
-var bytes = [];
-for (var i = 0; i < message.length; i++) {
-    var c = message.charCodeAt(i);
-    bytes.push(c & 0xFF);
-}
-printClient.send(bytes);
+// // Connect printer (type: USB), param: printer Name by getUsbPrinters()
+// printClient.connect("USB Support Printer 1", 0);
 
-// When we are finished
-printClient.close();
+// // Connect printer (type: Bluetooth), param: printer Name by getBlueToothPrinters()
+// printClient.connect("58 POS printer", 0);
+
+
 ```
 
 

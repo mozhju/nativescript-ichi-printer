@@ -1,10 +1,12 @@
 {
   "name": "nativescript-ichi-printer",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "description": "POS printer for NativeScript",
   "keywords": [
     "POS printer",
     "socket",
+    "USB",
+    "Bluetooth",
     "nativescript",
     "javascript"
   ],
