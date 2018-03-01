@@ -31,7 +31,7 @@ public class SerialPortPrinter {
         printerName = name;
     }
 
-    public static String[] getPrinters() {
+    public static List<String> getPrinters() {
         // TODO
         return null;
     }

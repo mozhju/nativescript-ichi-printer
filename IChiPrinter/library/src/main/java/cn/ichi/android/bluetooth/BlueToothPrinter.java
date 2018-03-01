@@ -1,5 +1,6 @@
 package cn.ichi.android.bluetooth;
 
+import android.app.Activity;
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -30,7 +31,7 @@ import cn.ichi.android.Utils;
  */
 
 public class BlueToothPrinter {
-
+    private static final int OPEN_BLUETOOTH_REQUEST = 111;
     private static final UUID MY_UUID = UUID.fromString("0001101-0000-1000-8000-00805F9B34FB");
 
     private BluetoothAdapter bluetoothAdapter;
@@ -49,32 +50,27 @@ public class BlueToothPrinter {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
-    public static String[] getPrinters() {
+    public static List<String> getPrinters() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
-        Iterator<BluetoothDevice> deviceIterator = devices.iterator();
 
         List<String> lstPrinterName = new ArrayList<String>();
-        while(deviceIterator.hasNext()){
-            BluetoothDevice device = deviceIterator.next();
+        for(BluetoothDevice device : devices){
             lstPrinterName.add(device.getName());
         }
 
-        return lstPrinterName.toArray(new String[1]);
+        return lstPrinterName;
     }
 
 
     private void getDevice() {
         Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
-        Iterator<BluetoothDevice> deviceIterator = devices.iterator();
 
-        while(deviceIterator.hasNext()){
-            BluetoothDevice device = deviceIterator.next();
-            if (device.getName() == printerName) {
+        for(BluetoothDevice device : devices){
+            if (printerName.equals(device.getName())) {
                 myDevice = device;
             }
         }
-
     }
 
 
@@ -120,6 +116,10 @@ public class BlueToothPrinter {
                 errorMsg = "没有找到指定的蓝牙设备";
             }
         } else {
+            Activity activity = Utils.getActivity();
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            activity.startActivityForResult(enableBtIntent, OPEN_BLUETOOTH_REQUEST);
+
             errorMsg = "系统蓝牙已关闭，不能连接蓝牙设备";
         }
         return  false;

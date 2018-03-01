@@ -1,7 +1,11 @@
 package cn.ichi.android.usb;
 
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.hardware.usb.UsbConstants;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
@@ -56,6 +60,27 @@ public class UsbPrinter {
     private String printerName;
     private String errorMsg = "";
 
+    PendingIntent mPermissionIntent;
+    BroadcastReceiver mUsbReceiver = new BroadcastReceiver(){
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            System.out.println("BroadcastReceiver in\n");
+            if (ACTION_DEVICE_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if (device != null) {
+                            System.out.println("usb EXTRA_PERMISSION_GRANTED");
+                        }
+                    } else {
+                        System.out.println("usb EXTRA_PERMISSION_GRANTED null!!!");
+                    }
+                }
+            }
+        }
+    };
+    String ACTION_DEVICE_PERMISSION = "cn.ichi.android.USB_PERMISSION";
+
     public  UsbPrinter(String name) {
         Application application = Utils.getApplication();
 
@@ -64,7 +89,7 @@ public class UsbPrinter {
         printerName = name;
     }
 
-    public static String[] getPrinters() {
+    public static List<String> getPrinters() {
         Application application = Utils.getApplication();
         if (application == null) {
             return null;
@@ -72,12 +97,10 @@ public class UsbPrinter {
 
         UsbManager usbManager = (UsbManager) application.getSystemService(Context.USB_SERVICE);
 
-        HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        Collection<UsbDevice> devices = usbManager.getDeviceList().values();
 
         List<String> lstPrinterName = new ArrayList<String>();
-        while(deviceIterator.hasNext()){
-            UsbDevice device = deviceIterator.next();
+        for(UsbDevice device: devices) {
             if (device.getInterfaceCount() > 0) {
                 UsbInterface anInterface = device.getInterface(0);
                 if (anInterface != null && anInterface.getInterfaceClass() == 7) {
@@ -86,20 +109,18 @@ public class UsbPrinter {
             }
         }
 
-        return lstPrinterName.toArray(new String[1]);
+        return lstPrinterName;
     }
 
 
     private void getUsbDevice() {
-        HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+        Collection<UsbDevice> devices = usbManager.getDeviceList().values();
 
-        while(deviceIterator.hasNext()) {
-            UsbDevice device = deviceIterator.next();
+        for(UsbDevice device: devices) {
             if (device.getInterfaceCount() > 0) {
                 UsbInterface anInterface = device.getInterface(0);
-                if (anInterface != null && anInterface.getInterfaceClass() == 7) {
-                    if (device.getDeviceName() == printerName) {
+                if (anInterface.getInterfaceClass() == 7) {
+                    if (device.getDeviceName().equals(printerName)) {
                         myUsbDevice = device;
                         usbInterface = anInterface;
                     }
@@ -156,6 +177,16 @@ public class UsbPrinter {
         if(usbManager.hasPermission(myUsbDevice)){
             //有权限，那么打开
             conn = usbManager.openDevice(myUsbDevice);
+        } else {
+            //没有权限，那么请求USB读写权限
+            Application application = Utils.getApplication();
+            mPermissionIntent = PendingIntent.getBroadcast(application, 0, new Intent(ACTION_DEVICE_PERMISSION),0);
+            IntentFilter permissionFilter = new IntentFilter(ACTION_DEVICE_PERMISSION);
+            application.registerReceiver(mUsbReceiver, permissionFilter);
+            usbManager.requestPermission(myUsbDevice, mPermissionIntent);
+
+            errorMsg = "没有USB读写权限";
+            return false;
         }
         if(null==conn){
             errorMsg = "不能连接到设备";

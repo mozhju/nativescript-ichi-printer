@@ -222,11 +222,15 @@ public class Printer {
         return jsonString;
     }
 
-    private static String ArrayToJsonString(String[] arr) {
+    private static String ArrayToJsonString(List<String> listPrinters) {
+        if (listPrinters == null || listPrinters.size() == 0) {
+            return "";
+        }
+
         try {
             JSONStringer stringer = new JSONStringer();
             stringer.array();
-            for (String value : arr) {
+            for (String value : listPrinters) {
                 stringer.value(value);
             }
             stringer.endArray();
