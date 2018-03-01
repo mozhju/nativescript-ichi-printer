@@ -78,7 +78,12 @@ public class UsbPrinter {
         List<String> lstPrinterName = new ArrayList<String>();
         while(deviceIterator.hasNext()){
             UsbDevice device = deviceIterator.next();
-            lstPrinterName.add(device.getDeviceName());
+            if (device.getInterfaceCount() > 0) {
+                UsbInterface anInterface = device.getInterface(0);
+                if (anInterface != null && anInterface.getInterfaceClass() == 7) {
+                    lstPrinterName.add(device.getDeviceName());
+                }
+            }
         }
 
         return lstPrinterName.toArray(new String[1]);
@@ -86,14 +91,19 @@ public class UsbPrinter {
 
 
     private void getUsbDevice() {
-
         HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
         Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
 
         while(deviceIterator.hasNext()) {
             UsbDevice device = deviceIterator.next();
-            if (device.getDeviceName() == printerName) {
-                myUsbDevice = device;
+            if (device.getInterfaceCount() > 0) {
+                UsbInterface anInterface = device.getInterface(0);
+                if (anInterface != null && anInterface.getInterfaceClass() == 7) {
+                    if (device.getDeviceName() == printerName) {
+                        myUsbDevice = device;
+                        usbInterface = anInterface;
+                    }
+                }
             }
         }
     }
@@ -174,17 +184,14 @@ public class UsbPrinter {
 
     public boolean connectPrinter() {
         errorMsg = "";
+        myUsbDevice = null;
+        usbInterface = null;
+        myDeviceConnection = null;
 
         getUsbDevice();
 
         if (myUsbDevice == null) {
             errorMsg = "没有找到指定的USB设备";
-            return false;
-        }
-
-        usbInterface = myUsbDevice.getInterface(0);
-        if (usbInterface == null){
-            errorMsg = "获得设备接口失败";
             return false;
         }
 

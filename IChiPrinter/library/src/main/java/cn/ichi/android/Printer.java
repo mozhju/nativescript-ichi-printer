@@ -1,8 +1,17 @@
 package cn.ichi.android;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import cn.ichi.android.Client;
 import cn.ichi.android.ClientListener;
@@ -196,17 +205,35 @@ public class Printer {
     }
 
 
-    public static String[] getUsbPrinters() {
-        return UsbPrinter.getPrinters();
+    public static String getUsbPrinters() {
+        String jsonString = ArrayToJsonString(UsbPrinter.getPrinters());
+        return jsonString;
     }
 
 
-    public static String[] getBlueToothPrinters() {
-        return BlueToothPrinter.getPrinters();
+    public static String getBlueToothPrinters() {
+        String jsonString = ArrayToJsonString(BlueToothPrinter.getPrinters());
+        return jsonString;
     }
 
 
-    public static String[] getSerialPortPrinters() {
-        return SerialPortPrinter.getPrinters();
+    public static String getSerialPortPrinters() {
+        String jsonString = ArrayToJsonString(SerialPortPrinter.getPrinters());
+        return jsonString;
     }
-}
+
+    private static String ArrayToJsonString(String[] arr) {
+        try {
+            JSONStringer stringer = new JSONStringer();
+            stringer.array();
+            for (String value : arr) {
+                stringer.value(value);
+            }
+            stringer.endArray();
+            return stringer.toString();
+        }catch (Exception ex) {
+            return "";
+        }
+    }
+
+ }
