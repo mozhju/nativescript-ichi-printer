@@ -81,7 +81,7 @@ public class TcpClient implements Client {
             public void run() {
                 try {
                     mSocket.getOutputStream().write(data);
-                    mListener.onSended(id);
+                    mListener.onSent(id);
                 } catch (IOException e) {
                     mListener.onError(id, e.getMessage());
                 }

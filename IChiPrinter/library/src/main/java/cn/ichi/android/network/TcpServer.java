@@ -107,8 +107,8 @@ public class TcpServer {
                         }
 
                         @Override
-                        public void onSended(int id){
-                            mListener.onSended(id);
+                        public void onSent(int id){
+                            mListener.onSent(id);
                         }
 
                         @Override

@@ -79,7 +79,7 @@ public class SerialPortClient implements Client {
             public void run() {
                 try {
                     if (mSerialPortPrinter.sendMessage(data)) {
-                        mListener.onSended(id);
+                        mListener.onSent(id);
                     } else {
                         mListener.onError(id, mSerialPortPrinter.getErrorMsg());
                     }

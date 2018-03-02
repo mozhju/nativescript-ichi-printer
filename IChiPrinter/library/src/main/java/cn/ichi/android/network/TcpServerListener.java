@@ -7,7 +7,7 @@ public interface TcpServerListener {
     void onData(InetAddress client, byte[] data);
     void onError(int id, InetAddress client, String message);
     void onConnected(int id);
-    void onSended(int id);
+    void onSent(int id);
     void onClosed(int id);
     void onStarted(int id);
     void onStoped(int id);

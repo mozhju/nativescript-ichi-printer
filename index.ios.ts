@@ -5,7 +5,7 @@ export class PrintClient {
     public onData: {(data: string): void;};
     public onError: {(id: number, message: string): void;};
     public onConnected: {(id: number): void;};
-    public onSended: {(id: number): void;};
+    public onSent: {(id: number): void;};
     public onClosed: {(id: number): void;};
 
 

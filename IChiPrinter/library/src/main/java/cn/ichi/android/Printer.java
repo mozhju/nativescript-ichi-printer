@@ -83,8 +83,8 @@ public class Printer {
             }
 
             @Override
-            public void onSended(int id){
-                mListener.onSended(id);
+            public void onSent(int id){
+                mListener.onSent(id);
             }
 
             @Override
@@ -113,8 +113,8 @@ public class Printer {
             }
 
             @Override
-            public void onSended(int id){
-                mListener.onSended(id);
+            public void onSent(int id){
+                mListener.onSent(id);
             }
 
             @Override
@@ -143,8 +143,8 @@ public class Printer {
             }
 
             @Override
-            public void onSended(int id){
-                mListener.onSended(id);
+            public void onSent(int id){
+                mListener.onSent(id);
             }
 
             @Override
@@ -173,8 +173,8 @@ public class Printer {
             }
 
             @Override
-            public void onSended(int id){
-                mListener.onSended(id);
+            public void onSent(int id){
+                mListener.onSent(id);
             }
 
             @Override

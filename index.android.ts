@@ -5,7 +5,7 @@ declare module cn {
             interface IClientListener {
                 onError(id: number, message: string): void;
                 onConnected(id: number): void;
-                onSended(id: number): void;
+                onSent(id: number): void;
                 onClosed(id: number): void;
                 onData(data: string): void;
             }
@@ -14,7 +14,7 @@ declare module cn {
                 constructor(implementation: IClientListener);
                 onError(id: number, message: string): void;
                 onConnected(id: number): void;
-                onSended(id: number): void;
+                onSent(id: number): void;
                 onClosed(id: number): void;
                 onData(data: string): void;
             }
@@ -39,7 +39,7 @@ export class PrintClient {
     public onData: {(data: string): void;};
     public onError: {(id: number, message: string): void;};
     public onConnected: {(id: number): void;};
-    public onSended: {(id: number): void;};
+    public onSent: {(id: number): void;};
     public onClosed: {(id: number): void;};
 
     constructor(printType?: number) {
@@ -57,9 +57,9 @@ export class PrintClient {
                 if (self.onConnected !== null)
                     self.onConnected(id);
             },
-            onSended: (id) => {
-                if (self.onSended !== null)
-                    self.onSended(id);
+            onSent: (id) => {
+                if (self.onSent !== null)
+                    self.onSent(id);
             },
             onClosed: (id) => {
                 if (self.onClosed !== null)

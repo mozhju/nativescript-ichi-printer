@@ -81,7 +81,7 @@ public class BluetoothClient implements Client {
             public void run() {
                 try {
                     if (mPrinter.sendMessage(data)) {
-                        mListener.onSended(id);
+                        mListener.onSent(id);
                     } else {
                         mListener.onError(id, mPrinter.getErrorMsg());
                     }

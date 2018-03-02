@@ -39,8 +39,8 @@ printClient.onConnected = (id: number) => {
     }
     printClient.send(bytes);
 };
-printClient.onSended = (id: number) => {
-    console.log("Print client sened action #: ", id);
+printClient.onSent = (id: number) => {
+    console.log("Print client sent action #: ", id);
     // When we are finished
     printClient.close();
 };

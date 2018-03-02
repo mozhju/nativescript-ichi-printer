@@ -81,7 +81,7 @@ public class UsbClient implements Client {
             public void run() {
                 try {
                     if (mUsbPrinter.sendMessage(data)) {
-                        mListener.onSended(id);
+                        mListener.onSent(id);
                     } else {
                         mListener.onError(id, mUsbPrinter.getErrorMsg());
                     }
