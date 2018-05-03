@@ -1,7 +1,7 @@
 package cn.ichi.android;
 
 public interface ClientListener {
-    void onData(byte[] data);
+    void onData(String data);
     void onError(int id, String message);
     void onConnected(int id);
     void onSent(int id);

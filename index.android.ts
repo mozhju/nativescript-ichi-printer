@@ -36,7 +36,7 @@ declare module cn {
 
 export class PrintClient {
     private client: cn.ichi.android.Printer;
-    public onData: {(data: string): void;};
+    public onData: {(data: Array<number>): void;};
     public onError: {(id: number, message: string): void;};
     public onConnected: {(id: number): void;};
     public onSent: {(id: number): void;};
@@ -45,25 +45,35 @@ export class PrintClient {
     constructor(printType?: number) {
         var self = this;
         var listener = new cn.ichi.android.ClientListener({
-            onData: (data) => {
-                if (self.onData !== null)
-                    self.onData(data);
+            onData: (jsonData) => {
+                if (self.onData !== null) {
+                    if (jsonData.length > 0) {
+                        var data = JSON.parse(jsonData)
+                        self.onData(data);
+                    } else {
+                        self.onData([]);
+                    }
+                }
             },
             onError: (id, message) => {
-                if (self.onError !== null)
+                if (self.onError !== null) {
                     self.onError(id, message);
+                }
             },
             onConnected: (id) => {
-                if (self.onConnected !== null)
+                if (self.onConnected !== null) {
                     self.onConnected(id);
+                }
             },
             onSent: (id) => {
-                if (self.onSent !== null)
+                if (self.onSent !== null) {
                     self.onSent(id);
+                }
             },
             onClosed: (id) => {
-                if (self.onClosed !== null)
+                if (self.onClosed !== null) {
                     self.onClosed(id);
+                }
             }
         });
         if (!printType) {

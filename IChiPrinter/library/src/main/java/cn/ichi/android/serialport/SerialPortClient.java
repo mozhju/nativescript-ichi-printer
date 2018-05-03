@@ -15,7 +15,7 @@ public class SerialPortClient implements Client {
     private AtomicInteger mId;
 
     private static final int mPollSize = 5;
-    private static final int mBufferSize = 8 * 1024 * 1024;
+    private static final int mBufferSize = 1024 * 1024;
 
     SerialPortClient(SerialPortPrinter serialPortPrinter, AtomicInteger id, SerialPortClientListener listener) {
         mListener = listener;

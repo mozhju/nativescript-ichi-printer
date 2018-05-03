@@ -17,7 +17,7 @@ public class BluetoothClient implements Client {
     private AtomicInteger mId;
 
     private static final int mPollSize = 5;
-    private static final int mBufferSize = 8 * 1024 * 1024;
+    private static final int mBufferSize = 1024 * 1024;
 
     BluetoothClient(BlueToothPrinter printer, AtomicInteger id, BluetoothClientListener listener) {
         mListener = listener;

@@ -69,7 +69,8 @@ public class Printer {
         mClient = new TcpClient(new TcpClientListener() {
             @Override
             public void onData(byte[] data) {
-                mListener.onData(data);
+                String strData = ByteArrayToJsonString(data);
+                mListener.onData(strData);
             }
 
             @Override
@@ -99,7 +100,8 @@ public class Printer {
         mClient = new UsbClient(new UsbClientListener() {
             @Override
             public void onData(byte[] data) {
-                mListener.onData(data);
+                String strData = ByteArrayToJsonString(data);
+                mListener.onData(strData);
             }
 
             @Override
@@ -129,7 +131,8 @@ public class Printer {
         mClient = new BluetoothClient(new BluetoothClientListener() {
             @Override
             public void onData(byte[] data) {
-                mListener.onData(data);
+                String strData = ByteArrayToJsonString(data);
+                mListener.onData(strData);
             }
 
             @Override
@@ -159,7 +162,8 @@ public class Printer {
         mClient = new SerialPortClient(new SerialPortClientListener() {
             @Override
             public void onData(byte[] data) {
-                mListener.onData(data);
+                String strData = ByteArrayToJsonString(data);
+                mListener.onData(strData);
             }
 
             @Override
@@ -202,6 +206,25 @@ public class Printer {
 
     public int receive() {
         return mClient.receive();
+    }
+
+
+    private String ByteArrayToJsonString(byte[] data) {
+        if (data == null || data.length == 0) {
+            return "";
+        }
+
+        try {
+            JSONStringer stringer = new JSONStringer();
+            stringer.array();
+            for (byte value : data) {
+                stringer.value(value);
+            }
+            stringer.endArray();
+            return stringer.toString();
+        }catch (Exception ex) {
+            return "";
+        }
     }
 
 
