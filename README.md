@@ -23,7 +23,7 @@ import {PrintClient} from "nativescript-ichi-printer";
 
 // new Printer Client, param:  0: TCP, 1: USB, 2: Bluetooth
 var printClient = new PrintClient(0);
-printClient.onData = (data: string) => {
+printClient.onData = (data: Array<number>) => {
     console.log("Data from Printer: ", data);
 };
 printClient.onError = (id: number, message: string) => {
