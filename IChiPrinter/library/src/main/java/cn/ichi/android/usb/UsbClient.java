@@ -13,24 +13,20 @@ public class UsbClient implements Client {
     private UsbClientListener mListener;
     private ExecutorService mExecutor;
     private UsbPrinter mUsbPrinter;
-    private byte[] mBuffer;
     private AtomicInteger mId;
 
-    private static final int mPollSize = 5;
-    private static final int mBufferSize = 1024 * 1024;
+    private final int mPollSize = 5;
 
     UsbClient(UsbPrinter usbPrinter, AtomicInteger id, UsbClientListener listener) {
         mListener = listener;
         mUsbPrinter = usbPrinter;
         mId = id;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
     }
 
     public UsbClient(UsbClientListener listener) {
         mListener = listener;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
         mId = new AtomicInteger();
     }
 
@@ -67,9 +63,10 @@ public class UsbClient implements Client {
                 } catch (Exception e) {
                     mListener.onError(id, e.getMessage());
                 }
-
             }
         });
+        mExecutor.shutdown();
+        mExecutor = null;
         return id;
     }
 
@@ -100,6 +97,7 @@ public class UsbClient implements Client {
             @Override
             public void run() {
                 try {
+                    byte[] mBuffer = new byte[1024 * 1024];
                     int size = mUsbPrinter.receiveMessage(mBuffer);
                     byte [] sub = null;
                     if (size > 0) {

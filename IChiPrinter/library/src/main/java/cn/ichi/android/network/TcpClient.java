@@ -13,24 +13,20 @@ public class TcpClient implements Client {
     private TcpClientListener mListener;
     private ExecutorService mExecutor;
     private Socket mSocket;
-    private byte[] mBuffer;
     private AtomicInteger mId;
 
-    private static final int mPollSize = 5;
-    private static final int mBufferSize = 1024 * 1024;
+    private int mPollSize = 5;
 
     TcpClient(Socket socket, AtomicInteger id, TcpClientListener listener) {
         mListener = listener;
         mSocket = socket;
         mId = id;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
     }
 
     public TcpClient(TcpClientListener listener) {
         mListener = listener;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
         mId = new AtomicInteger();
     }
 
@@ -67,9 +63,10 @@ public class TcpClient implements Client {
                 } catch (IOException e) {
                     mListener.onError(id, e.getMessage());
                 }
-
             }
         });
+        mExecutor.shutdown();
+        mExecutor = null;
         return id;
     }
 
@@ -97,6 +94,7 @@ public class TcpClient implements Client {
             @Override
             public void run() {
                 try {
+                    byte[] mBuffer = new byte[1024 * 1024];
                     int size = mSocket.getInputStream().read(mBuffer);
                     byte [] sub =null;
                     if (size > 0) {

@@ -13,24 +13,20 @@ public class BluetoothClient implements Client {
     private BluetoothClientListener mListener;
     private ExecutorService mExecutor;
     private BlueToothPrinter mPrinter;
-    private byte[] mBuffer;
     private AtomicInteger mId;
 
-    private static final int mPollSize = 5;
-    private static final int mBufferSize = 1024 * 1024;
+    private final int mPollSize = 5;
 
     BluetoothClient(BlueToothPrinter printer, AtomicInteger id, BluetoothClientListener listener) {
         mListener = listener;
         mPrinter = printer;
         mId = id;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
     }
 
     public BluetoothClient(BluetoothClientListener listener) {
         mListener = listener;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
         mId = new AtomicInteger();
     }
 
@@ -67,9 +63,10 @@ public class BluetoothClient implements Client {
                 } catch (Exception e) {
                     mListener.onError(id, e.getMessage());
                 }
-
             }
         });
+        mExecutor.shutdown();
+        mExecutor = null;
         return id;
     }
 
@@ -100,8 +97,9 @@ public class BluetoothClient implements Client {
             @Override
             public void run() {
                 try {
+                    byte[] mBuffer = new byte[1024 * 1024];
                     int size = mPrinter.receiveMessage(mBuffer);
-                    byte [] sub =null;
+                    byte [] sub = null;
                     if (size > 0) {
                         sub = Arrays.copyOfRange(mBuffer, 0, size);
                     } else {

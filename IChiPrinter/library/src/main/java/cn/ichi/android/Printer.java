@@ -245,6 +245,7 @@ public class Printer {
         return jsonString;
     }
 
+
     private static String ArrayToJsonString(List<String> listPrinters) {
         if (listPrinters == null || listPrinters.size() == 0) {
             return "";
@@ -262,5 +263,6 @@ public class Printer {
             return "";
         }
     }
+
 
  }

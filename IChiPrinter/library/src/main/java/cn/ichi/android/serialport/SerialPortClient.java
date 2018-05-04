@@ -11,24 +11,20 @@ public class SerialPortClient implements Client {
     private SerialPortClientListener mListener;
     private ExecutorService mExecutor;
     private SerialPortPrinter mSerialPortPrinter;
-    private byte[] mBuffer;
     private AtomicInteger mId;
 
-    private static final int mPollSize = 5;
-    private static final int mBufferSize = 1024 * 1024;
+    private final int mPollSize = 5;
 
     SerialPortClient(SerialPortPrinter serialPortPrinter, AtomicInteger id, SerialPortClientListener listener) {
         mListener = listener;
         mSerialPortPrinter = serialPortPrinter;
         mId = id;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
     }
 
     public SerialPortClient(SerialPortClientListener listener) {
         mListener = listener;
         mExecutor = Executors.newFixedThreadPool(mPollSize);
-        mBuffer = new byte[mBufferSize];
         mId = new AtomicInteger();
     }
 
@@ -65,9 +61,10 @@ public class SerialPortClient implements Client {
                 } catch (Exception e) {
                     mListener.onError(id, e.getMessage());
                 }
-
             }
         });
+        mExecutor.shutdown();
+        mExecutor = null;
         return id;
     }
 
@@ -98,6 +95,7 @@ public class SerialPortClient implements Client {
             @Override
             public void run() {
                 try {
+                    byte[] mBuffer = new byte[1024 * 1024];
                     int size = mSerialPortPrinter.receiveMessage(mBuffer);
                     byte [] sub = null;
                     if (size > 0) {
