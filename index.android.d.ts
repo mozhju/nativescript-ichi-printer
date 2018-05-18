@@ -8,8 +8,7 @@ export declare class PrintClient {
     public onSent: {(id: number): void;};
     public onClosed: {(id: number): void;};
 
-    constructor(printType?: number) {
-    }
+    constructor(printType?: number);
 
     public connect(servername: string, port: number): number;
 
